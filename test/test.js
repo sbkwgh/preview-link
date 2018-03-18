@@ -4,7 +4,7 @@ let expect = chai.expect;
 
 let getOGPreviewData = require('../lib/getOGPreviewData');
 let getPreviewHTML = require('../lib/getPreviewHTML');
-let linkPreview = require('./index');
+let linkPreview = require('../index');
 
 let github = require('../lib/patterns/github');
 let wikipedia = require('../lib/patterns/wikipedia');

@@ -4,7 +4,7 @@
   "description": "Generates a HTML string with a preview or summary of a webpage",
   "main": "index.js",
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha --timeout 30000"
+    "test": "node ./node_modules/mocha/bin/mocha -w --timeout 30000"
   },
   "engines": {
     "node": ">= 7.6.0"
