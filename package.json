@@ -19,5 +19,9 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^3.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sbkwgh/preview-link.git"
   }
 }
