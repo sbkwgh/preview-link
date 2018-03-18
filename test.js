@@ -1,32 +1,18 @@
-process.env.NODE_ENV = 'test';
-
 let chai = require('chai');
-let server = require('../server');
 let should = chai.should();
 let expect = chai.expect;
 
-let getOGPreviewData = require('../lib/linkPreview/getOGPreviewData');
-let getPreviewHTML = require('../lib/linkPreview/getPreviewHTML');
-let linkPreview = require('../lib/linkPreview');
+let getOGPreviewData = require('./lib/getOGPreviewData');
+let getPreviewHTML = require('./lib/getPreviewHTML');
+let linkPreview = require('./index');
 
-let github = require('../lib/linkPreview/patterns/github');
-let wikipedia = require('../lib/linkPreview/patterns/wikipedia');
-let twitter = require('../lib/linkPreview/patterns/twitter');
-let amazon = require('../lib/linkPreview/patterns/amazon');
-
-const Errors = require('../lib/errors.js');
-
-chai.use(require('chai-http'));
-chai.use(require('chai-things'));
+let github = require('./lib/patterns/github');
+let wikipedia = require('./lib/patterns/wikipedia');
+let twitter = require('./lib/patterns/twitter');
+let amazon = require('./lib/patterns/amazon');
 
 
 describe('link_expansion', () => {
-	//Wait for app to start before commencing
-	before((done) => {
-		if(server.locals.appStarted) done();
-		server.on('appStarted', done);
-	});
-
 	describe('getOGPreviewData', () => {
 		it('should return an object containing relevant OG data', async () => {
 			let data = await getOGPreviewData('https://www.theguardian.com/news/2018/mar/17/cambridge-analytica-facebook-influence-us-election')

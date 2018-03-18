@@ -1,13 +1,13 @@
 let fs = require('fs');
 let path = require('path')
 
-let getOGPreviewData = require('./getOGPreviewData');
-let getPreviewHTML = require('./getPreviewHTML');
+let getOGPreviewData = require('./lib/getOGPreviewData');
+let getPreviewHTML = require('./lib/getPreviewHTML');
 
 let previewPatterns = 
-	fs.readdirSync(path.join(__dirname, 'patterns'))
+	fs.readdirSync(path.join(__dirname, 'lib', 'patterns'))
 	  .map(file => {
-	      return require(path.join(__dirname, 'patterns', file));
+	      return require(path.join(__dirname, 'lib', 'patterns', file));
 	  });
 
 module.exports =  async function linkPreview(url) {
