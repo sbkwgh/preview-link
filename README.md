@@ -2,6 +2,9 @@
 
 Package which generates a HTML string as a preview or summary of a webpage.
 
+Custom support for Twitter, GitHub, Wikipedia, Amazon and more to come.    
+Otherwise uses Open Graph data, with other meta-tags as a fallback to generate the preview.
+
 ## Usage
 Preview-link has a very simple API - it's just one function.
 
