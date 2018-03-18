@@ -1,7 +1,7 @@
 {
   "name": "preview-link",
   "version": "0.0.0",
-  "description": "Generates a HTML string with a preview or summary of a webpage",
+  "description": "Package which generates a HTML string as a preview or summary of a webpage",
   "main": "index.js",
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha -w --timeout 30000"
