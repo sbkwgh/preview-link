@@ -11,27 +11,38 @@ let previewPatterns =
 	  });
 
 module.exports =  async function linkPreview(url) {
-	let previewData;
+	try {
+		let previewData, html;
 
-	for(let pattern of previewPatterns) {
-		if(pattern.matches(url)) {
-			previewData = await pattern.getPreviewData(url);
-			break;
+		for(let pattern of previewPatterns) {
+			if(pattern.matches(url)) {
+				previewData = await pattern.getPreviewData(url);
+				break;
+			}
 		}
-	}
 
-	//If the url doesn't match a pattern for a specific
-	//site, try getting a possible preview using OG tags
-	if(!previewData) previewData = await getOGPreviewData(url);
+		//If the url doesn't match a pattern for a specific
+		//site, try getting a possible preview using OG tags
+		if(!previewData) previewData = await getOGPreviewData(url);
 
-	//If there is some data scraped from the site for a
-	//preview, generate a HTML string
-	//Otherwise return an empty string
-	if(typeof previewData === 'object' && previewData !== null) {
-		return getPreviewHTML(previewData);
-	} else if(typeof previewData === 'string') {
-		return previewData;
-	} else {
-		return '';
+		//If there is some data scraped from the site for preview, generate a HTML string
+		//Otherwise return an error
+		if(typeof previewData === 'object' && previewData !== null) {
+			html = getPreviewHTML(previewData);
+		}
+
+		return { error: null, html: html || previewData };
+	} catch (e) {
+		let error;
+
+		if (e.message === 'No preview available') {
+			error = e.message;
+		} else if(e.response && e.response.status.toString()[0] !== '2') {
+			error = e.message;
+		} else {
+			errror = 'Unknown error'
+		}
+		
+		return { error, html: null };
 	}
 }

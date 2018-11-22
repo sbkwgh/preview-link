@@ -13,6 +13,23 @@ let amazon = require('../lib/patterns/amazon');
 
 
 describe('link_expansion', () => {
+	describe('errors', () => {
+		it('should return an error if URl does not exist', async () => {
+			let res = await linkPreview('https://en.wikipedia.org/wiki/not_a_real_url_404')
+
+			res.should.have.property(
+				'error',
+				'Request failed with status code 404'
+			);
+
+			res.should.have.property(
+				'html',
+				null
+			);
+
+		});
+	});
+
 	describe('getOGPreviewData', () => {
 		it('should return an object containing relevant OG data', async () => {
 			let data = await getOGPreviewData('https://www.theguardian.com/news/2018/mar/17/cambridge-analytica-facebook-influence-us-election')
@@ -22,16 +39,14 @@ describe('link_expansion', () => {
 				'Revealed: 50 million Facebook profiles harvested for Cambridge Analytica in major data breach'
 			);
 			data.should.have.property(
-				'description',
-				'Whistleblower describes how firm linked to former Trump adviser Steve Bannon compiled user data to target American voters• How Cambridge Analytica’s algorithms turned ‘likes’ into a political tool'
+				'description'
 			);
 			data.should.have.property(
 				'url',
 				'http://www.theguardian.com/news/2018/mar/17/cambridge-analytica-facebook-influence-us-election'
 			);
 			data.should.have.property(
-				'image',
-				'https://i.guim.co.uk/img/media/97532076a6935a1e79eba294437ed91f3eb4df6b/0_626_4480_2688/master/4480.jpg?w=1200&h=630&q=55&auto=format&usm=12&fit=crop&crop=faces%2Centropy&bm=normal&ba=bottom%2Cleft&blend64=aHR0cHM6Ly91cGxvYWRzLmd1aW0uY28udWsvMjAxOC8wMS8zMS9mYWNlYm9va19kZWZhdWx0LnBuZw&s=365825fe053733ae12f9b050f5374594'
+				'image'
 			);
 		});
 		it('should use other meta or title tags if there is no OG tags availible', async () => {
@@ -42,52 +57,56 @@ describe('link_expansion', () => {
 				"'E' is for 'effective'. EJS is a simple templating language that lets you generate HTML markup with plain JavaScript. No religiousness about how to organize things. No reinvention of iteration and control-flow. It's just plain JavaScript."
 			);
 		});
-		it('should return null if there is no OG tags availible', async () => {
-			let data = await getOGPreviewData('http://blank.org');
-			expect(data).to.be.null;
+		it('should return an error if there is no OG tags availible', async () => {
+			try {
+				let data = await getOGPreviewData('http://blank.org');
+			} catch (e) {
+				e.should.have.property('message', 'No preview available');
+			}
 		});
 	});
 
 	describe('getPreviewHTML', () => {
 		it('should return an HTML string for given object', () => {
-			let HTML = getPreviewHTML({
+			let res = getPreviewHTML({
 				url: 'http://www.example.com',
 				description: 'description',
 				title: 'title',
 				image: 'image'
 			});
 
-			(typeof HTML).should.equal('string');
+			(typeof res).should.equal('string');
 		})
 		it('should correctly deal with the conditional', () => {
-			let HTML = getPreviewHTML({
+			let res = getPreviewHTML({
 				url: 'http://www.example.com',
 				description: 'description',
 				title: 'title'
 			});
-			(typeof HTML).should.equal('string');
+			(typeof res).should.equal('string');
 		})
 	});
 
 	describe('linkPreview', () => {
 		it('should get a HTML string from an OG link', async () => {
-			let HTML = await linkPreview('https://www.theguardian.com/news/2018/mar/17/cambridge-analytica-facebook-influence-us-election');
+			let res = await linkPreview('https://www.theguardian.com/news/2018/mar/17/cambridge-analytica-facebook-influence-us-election');
 
-			(typeof HTML).should.equal('string');
-			HTML.length.should.be.above(0);
+			(typeof res.html).should.equal('string');
+			res.html.length.should.be.above(0);
 		});
 
 		it('should get a HTML string from a custom pattern', async () => {
-			let HTML = await linkPreview('https://en.wikipedia.org/wiki/google');
+			let res = await linkPreview('https://en.wikipedia.org/wiki/google');
 
-			(typeof HTML).should.equal('string');
-			HTML.length.should.be.above(0);
+			(typeof res.html).should.equal('string');
+			res.html.length.should.be.above(0);
 		});
 
 		it('should return an empty string from an invalid site', async () => {
-			let HTML = await linkPreview('http://blank.org');
+			let res = await linkPreview('http://blank.org');
 
-			(typeof HTML).should.equal('string');
+			expect(res.html).to.be.null;
+			res.error.length.should.be.above(0);
 		});
 	});
 
@@ -167,11 +186,9 @@ describe('link_expansion', () => {
 				"Fruit of the Loom Men's Super Premium Short Sleeve T-Shirt"
 			);
 			data.should.have.property(
-				'image',
-				'https://images-na.ssl-images-amazon.com/images/I/91q6n9sLPsL._UL1500_.jpg'
+				'image'
 			);
-			data.partial.includes('4.4 out of 5 stars').should.be.true;
-			data.partial.includes('£1.20 - £19.99').should.be.true;
+			data.partial.includes('out of 5 stars').should.be.true;
 		});
 	});
 })
