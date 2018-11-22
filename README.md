@@ -15,4 +15,12 @@ Preview-link has a very simple API - it's just one function.
         return await previewLink(url);
     }
 
-    previewLink(url).then(HTML => /* do something */).catch(err => /* catch something */);
+    previewLink(url).then(res => /* do something */).catch(err => /* catch something */);
+
+The response object contains two properties
+
+ * `error` (null | string)
+ 	* A string detailing the error (either no preview available, http error, or unknown)
+
+* `html` (null | string)
+	* A string giving the html preview
