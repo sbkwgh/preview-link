@@ -1,6 +1,6 @@
 {
   "name": "preview-link",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Package which generates a HTML string as a preview or summary of a webpage",
   "main": "index.js",
   "scripts": {
