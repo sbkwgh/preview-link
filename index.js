@@ -37,10 +37,10 @@ module.exports =  async function linkPreview(url) {
 
 		if (e.message === 'No preview available') {
 			error = e.message;
-		} else if(e.response && e.response.status.toString()[0] !== '2') {
+		} else if(e.message && e.response && e.response.status) {
 			error = e.message;
 		} else {
-			errror = 'Unknown error'
+			error = 'Unknown error'
 		}
 		
 		return { error, html: null };
